@@ -1,0 +1,16 @@
+{% extends 'base_profile.html' %}
+{% block active_home %}
+class="active"
+{% endblock %}
+{% block body %}
+{{profile.user.username}}<br>
+{% for h in history %}
+{{h.leavetype}}&nbsp
+{{h.startdate}}&nbsp
+{{h.enddate}}&nbsp
+{{h.status}}&nbsp
+{{h.des}}&nbsp
+{{h.half_day}}&nbsp
+<br>
+{% endfor %}
+{% endblock %}

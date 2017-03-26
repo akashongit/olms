@@ -6,8 +6,6 @@ from django.db import models
 
 class Employee(models.Model):
     user = models.OneToOneField(User)
-    # leave_his = models.ForeignKey(leave_history, on_delete=models.CASCADE)
-    # leave_stat = models.ForeignKey(leave_statistics, on_delete=models.CASCADE)
     dept=( 
         
         ('cs','Computer Science'),

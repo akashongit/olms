@@ -67,6 +67,10 @@ def home(request):
 def userpage(request):
         profile = Employee.objects.get(user=request.user)
         template='user_login/hi.html'
+        if profile.user.is_staff==False:
+                template='user_login/hi.html'
+        else:
+                template='user_login/super.html'
         print(request.user.get_username())
         return render(request,template,{'profile':profile})    
           
@@ -82,26 +86,21 @@ class leave_cancel(View):
                 return render(request,template,{'profile':profile})
 
 
-class leave_history(View):
+class leavehistory(View):
         def get(self,request):
                 template = 'user_login/leave_history.html'
-                profile = Employee.objects.get(user=request.user)
-                leave_hist = leave_history.objects.get(user=profile.user)
-                # history = leave_history.objects.get(user=request.user)
-                # history = leave_history.objects.all()
-                # history = leave_statistics.object.all()
-                if leave_stat:
-                        print ("sucesssyooo")
-
-                else:
-                        print ("error")
-
-                return render(request, template, {'profile': profile})
+                profile = Employee.objects.get(user=request.user)       
+                try:
+                        history = leave_history.objects.filter(user=profile.user)                      
+                except AttributeError:
+                        print("error")
+                return render(request, template, {'profile': profile,'history':history})
 
         def post(self,request):
                 template = 'user_login/leave_history.html'
                 profile = Employee.objects.get(user=request.user)
-                return render(request,template,{'profile':profile})
+                history = leave_history.objects.filter(user=profile.user)
+                return render(request,template,{'profile':profile,'history':history[0]})
 
 class check_status(View):
         def get(self,request):
@@ -118,7 +117,8 @@ class statistics(View):
         def get(self,request):
                 template = 'user_login/statistics.html'
                 profile = Employee.objects.get(user=request.user)
-                return render(request, template, {'profile': profile})
+                leave_stat=leave_statistics.objects.get(user=profile.user)
+                return render(request, template, {'profile': profile,'leave':leave_stat})
 
         def post(self,request):
                 template='user_login/statistics.html'
@@ -136,6 +136,26 @@ class profile(View):
                 profile = Employee.objects.get(user=request.user)
                 return render(request,template,{'profile':profile})
 
+class pendingleave(View):
+        def get(self,request):
+                template = 'user_login/pending_leave.html'
+                profile = Employee.objects.get(user=request.user)
+                return render(request, template, {'profile': profile})
 
+        def post(self,request):
+                template='user_login/pending_leave.html'
+                profile = Employee.objects.get(user=request.user)
+                return render(request,template,{'profile':profile})
+
+class empprofile(View):
+        def get(self,request):
+                template = 'user_login/emp_profile.html'
+                profile = Employee.objects.get(user=request.user)
+                return render(request, template, {'profile': profile})
+
+        def post(self,request):
+                template='user_login/emp_profile.html'
+                profile = Employee.objects.get(user=request.user)
+                return render(request,template,{'profile':profile})
 
 
